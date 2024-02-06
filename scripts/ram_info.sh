@@ -9,11 +9,11 @@ get_ratio()
 {
   case $(uname -s) in
     Linux)
-      usage="$(free -h | awk 'NR==2 {print $3}')"
-      total="$(free -h | awk 'NR==2 {print $2}')"
+      usage="$(free | awk 'NR==2 {print $3}')"
+      total="$(free | awk 'NR==2 {print $2}')"
       formated="${usage}/${total}"
-      
-      echo "${formated//i/B}"
+
+      echo `awk -v usage="$usage" -v total="$total" 'BEGIN {printf "%.1f/%.1f GB", usage / 1024 / 1024, total / 1024 / 1024}'`
       ;;
 
     Darwin)
