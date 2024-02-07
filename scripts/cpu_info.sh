@@ -9,24 +9,24 @@ get_percent()
 {
   case $(uname -s) in
     Linux)
-      percent=$(LC_NUMERIC=en_US.UTF-8 top -bn2 -d 0.01 | grep "Cpu(s)" | tail -1 | sed "s/.*, *\([0-9.]*\)%* id.*/\1/" | awk '{print 100 - $1"%"}')
-      normalize_percent_len $percent
+      percent=$(LC_NUMERIC=en_US.UTF-8 top -bn2 -d 0.01 | grep "Cpu(s)" | tail -1 | sed "s/.*, *\([0-9.]*\)%* id.*/\1/" | awk '{print 100 - $1}')
+      echo `awk -v val=$percent 'BEGIN {printf "%5d%%", val}'`
       ;;
 
     Darwin)
       cpuvalue=$(ps -A -o %cpu | awk -F. '{s+=$1} END {print s}')
       cpucores=$(sysctl -n hw.logicalcpu)
       cpuusage=$(( cpuvalue / cpucores ))
-      percent="$cpuusage%"
-      normalize_percent_len $percent
+      percent="$cpuusage"
+      echo `awk -v val=$percent 'BEGIN {printf "%7d%%", val}'`
       ;;
 
     OpenBSD)
       cpuvalue=$(ps -A -o %cpu | awk -F. '{s+=$1} END {print s}')
       cpucores=$(sysctl -n hw.ncpuonline)
       cpuusage=$(( cpuvalue / cpucores ))
-      percent="$cpuusage%"
-      normalize_percent_len $percent
+      percent="$cpuusage"
+      echo `awk -v val=$percent 'BEGIN {printf "%5d%%", val}'`
       ;;
 
     CYGWIN*|MINGW32*|MSYS*|MINGW*)
@@ -57,7 +57,7 @@ main() {
     echo "$cpu_label $(get_load)"
   else
     cpu_percent=$(get_percent)
-    echo "$cpu_label $cpu_percent"
+    echo "$cpu_label $cpu_percent "
   fi
   sleep $RATE
 }

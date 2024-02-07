@@ -24,7 +24,8 @@ main()
     echo "${TIME_NOW}" > "${LAST_EXEC_FILE}"
   fi
 
-  cat "${DATAFILE}"
+  data=`cat ${DATAFILE}`
+  echo "$data"
 }
 
 #run main driver function
