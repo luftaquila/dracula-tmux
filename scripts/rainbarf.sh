@@ -6,7 +6,7 @@ current_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 main()
 {
-  rainbarf --tmux --rgb --width 20
+  rainbarf --tmux --rgb --no-battery --width 20
 }
 
 main
