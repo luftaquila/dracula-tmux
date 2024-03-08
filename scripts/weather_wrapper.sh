@@ -25,7 +25,7 @@ main()
   fi
 
   data=`cat ${DATAFILE}`
-  echo "$data"
+  echo "$data "
 }
 
 #run main driver function

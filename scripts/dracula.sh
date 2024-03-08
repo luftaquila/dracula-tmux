@@ -267,6 +267,14 @@ main()
       IFS=$' ' read -r -a colors <<< $(get_tmux_option "@dracula-rainbarf-colors" "default default")
       script="#($current_dir/rainbarf.sh)"
 
+    elif [ $plugin = "arch" ]; then
+      IFS=$' ' read -r -a colors <<< $(get_tmux_option "@dracula-arch-colors" "default default")
+      script="#($current_dir/arch.sh)"
+
+    elif [ $plugin = "ip" ]; then
+      IFS=$' ' read -r -a colors <<< $(get_tmux_option "@dracula-ip-addr-colors" "default default")
+      script="#($current_dir/ip.sh)"
+
     else
       continue
     fi
