@@ -176,6 +176,7 @@ main() {
   tmux set-option -g status-right ""
 
   for plugin in "${plugins[@]}"; do
+    local right_padding=" "
 
     if case $plugin in custom:*) true;; *) false;; esac; then
       script=${plugin#"custom:"}
@@ -327,6 +328,7 @@ main() {
     elif [ $plugin = "rainbarf" ]; then
       IFS=$' ' read -r -a colors <<< $(get_tmux_option "@dracula-rainbarf-colors" "default default")
       script="#($current_dir/rainbarf.sh)"
+      right_padding=$(get_tmux_option "@dracula-rainbarf-padding" "")
 
     elif [ $plugin = "cpu-arch" ]; then
       IFS=$' ' read -r -a colors <<< $(get_tmux_option "@dracula-cpu-arch-colors" "default default")
@@ -357,9 +359,9 @@ main() {
       powerbg=${!colors[0]}
     else
       if $show_empty_plugins; then
-        tmux set-option -ga status-right "#[fg=${!colors[1]},bg=${!colors[0]}] $script "
+        tmux set-option -ga status-right "#[fg=${!colors[1]},bg=${!colors[0]}] $script$right_padding"
       else
-        tmux set-option -ga status-right "#{?#{==:$script,},,#[fg=${!colors[1]},bg=${!colors[0]}] $script }"
+        tmux set-option -ga status-right "#{?#{==:$script,},,#[fg=${!colors[1]},bg=${!colors[0]}] $script$right_padding}"
       fi
     fi
 
