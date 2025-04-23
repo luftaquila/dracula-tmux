@@ -181,7 +181,7 @@ main() {
     fi
     powerbg=${bg_color}
   else
-    tmux set-option -g status-left "#[bg=${green}]#[fg=${dark_gray}]#{?client_prefix,#[bg=${yellow}],} ${left_icon}"
+tmux set-option -g status-left "#[bold]#[bg=#9c73fe,fg=#f2ecff]#{?client_prefix,#[bg=${pink}]#[fg=${white}],} ${left_icon}#[nobold]"
   fi
 
   # Status right
