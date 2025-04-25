@@ -38,8 +38,7 @@ function fetch_weather_information() {
   # Drop response body when status code >= 400 and return nonzero by passing the
   # `--fail` flag. Execute curl last to allow the consumer to leverage the
   # return code. Pass `--show-error` and redirect stderr for the consumer.
-  command -p curl -L --silent --fail --show-error \
-    "${API_URL}/${_location// /%20}?format=%C${DELIM}%t${DELIM}%l&${_unit}" 2>&1
+  command -p curl -L --silent --fail "${API_URL}/${_location// /%20}?format=%c${DELIM}%t${DELIM}%l&${_unit}"
 }
 
 # Format raw weather information from API
@@ -50,35 +49,16 @@ function fetch_weather_information() {
 #   show location, either "true" or "false"
 function format_weather_info() {
   local _raw _show_location
-  _raw="$1" # e.g. "Rain:+63°F:Houston, Texas, United States"
+  _raw="$1" # e.g. "<icon> +63°F:Houston, Texas, United States"
   _show_location="$2"
 
   local _weather _temp _location
   _weather="${_raw%%"${DELIM}"*}"                                  # slice temp and location to get weather
-  _weather=$(printf '%s' "$_weather" | tr '[:upper:]' '[:lower:]') # lowercase weather, OSX’s bash3.2 does not support ${v,,}
   _temp="${_raw#*"${DELIM}"}"                                      # slice weather to get temp and location
   _temp="${_temp%%"${DELIM}"*}"                                    # slice location to get temp
   _temp="${_temp/+/}"                                              # slice "+" from "+74°F"
   _location="${_raw##*"${DELIM}"}"                                 # slice weather and temp to get location
   [ "${_location//[^,]/}" == ",," ] && _location="${_location%,*}" # slice country if it exists
-
-  case "$_weather" in
-  'snow')
-    _weather='❄'
-    ;;
-  'rain' | 'shower')
-    _weather='☂'
-    ;;
-  'overcast' | 'cloud')
-    _weather='☁'
-    ;;
-  'na')
-    _weather=''
-    ;;
-  *)
-    _weather='☀'
-    ;;
-  esac
 
   if "$_show_location"; then
     printf '%s %s %s' "$_weather" "$_temp" "$_location"
@@ -102,7 +82,7 @@ function main() {
 
   # process should be cancelled when session is killed
   if ! timeout 1 bash -c "</dev/tcp/wttr.in/443"; then
-    printf 'Weather Unavailable\n'
+    printf '󰖔 -\n'
     return
   fi
 
@@ -113,10 +93,10 @@ function main() {
     # e.g. "curl: (22) The requested URL returned error: 404"
     case "${_resp##* }" in
     404)
-      printf 'Unknown Location\n'
+      printf '󰖔 -\n'
       ;;
     *)
-      printf 'Weather Unavailable\n'
+      printf '󰖔 -\n'
       ;;
     esac
 
