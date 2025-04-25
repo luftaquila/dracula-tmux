@@ -64,19 +64,19 @@ function format_weather_info() {
 
   case "$_weather" in
   'snow')
-    _weather='❄'
+    _weather=''
     ;;
   'rain' | 'shower')
-    _weather='☂'
+    _weather=''
     ;;
   'overcast' | 'cloud')
-    _weather='☁'
+    _weather=''
     ;;
   'na')
-    _weather=''
+    _weather=''
     ;;
   *)
-    _weather='☀'
+    _weather=''
     ;;
   esac
 
@@ -102,7 +102,7 @@ function main() {
 
   # process should be cancelled when session is killed
   if ! timeout 1 bash -c "</dev/tcp/wttr.in/443"; then
-    printf 'Weather Unavailable\n'
+    printf '󰖔 -\n'
     return
   fi
 
@@ -113,10 +113,10 @@ function main() {
     # e.g. "curl: (22) The requested URL returned error: 404"
     case "${_resp##* }" in
     404)
-      printf 'Unknown Location\n'
+      printf '󰖔 -\n'
       ;;
     *)
-      printf 'Weather Unavailable\n'
+      printf '󰖔 -\n'
       ;;
     esac
 
