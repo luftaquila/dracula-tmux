@@ -324,6 +324,10 @@ main() {
       IFS=' ' read -r -a colors <<< $(get_tmux_option "@dracula-sys-temp-colors" "green dark_gray")
       script="#($current_dir/sys_temp.sh)"
 
+    elif [ $plugin = "rainbarf" ]; then
+      IFS=$' ' read -r -a colors <<< $(get_tmux_option "@dracula-rainbarf-colors" "default default")
+      script="#($current_dir/rainbarf.sh)"
+
     elif [ $plugin = "cpu-arch" ]; then
       IFS=$' ' read -r -a colors <<< $(get_tmux_option "@dracula-cpu-arch-colors" "default default")
       script="#($current_dir/cpu_arch.sh)"
