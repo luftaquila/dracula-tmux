@@ -8,7 +8,8 @@ source $current_dir/utils.sh
 main()
 {
   uptime_label=$(get_tmux_option "@dracula-uptime-label" "UP")
-  uptime=$(uptime | awk -F' up ' '{ split($2,a,","); printf "%s", a[1] }')
+  uptime=$(uptime | awk -F' up ' '{ split($2,a,","); sub(/^[[:space:]]+/, "", a[1]); print a[1] }')
+
   echo "$uptime_label $uptime"
 }
 
