@@ -394,14 +394,22 @@ tmux set-option -g status-left "#[bold]#[bg=#9c73fe,fg=#f2ecff]#{?client_prefix,
 
   done
 
+  # coding agent turn state, set per window by scripts/agent_state.sh from the
+  # agents' hooks: running = yellow, waiting for the user = red, done = green
+  agent_state="#{?#{@agent}, #{?#{==:#{@agent},running},#[fg=${yellow}],#{?#{==:#{@agent},waiting},#[fg=${red}],#[fg=${green}]}}●#[fg=${white}],}"
+
+  # a done marker means "finished while you were away": drop it once seen
+  tmux set-hook -g 'session-window-changed[100]' 'if -F "#{==:#{@agent},done}" "set -wu @agent"'
+  tmux set-hook -g 'client-session-changed[100]' 'if -F "#{==:#{@agent},done}" "set -wu @agent"'
+
   # Window option
   if $show_powerline; then
-    tmux set-window-option -g window-status-current-format "#[fg=${window_sep_fg}]#[bg=${window_sep_bg}]${window_sep}#[fg=${white}]#[bg=${dark_purple}] #I #W${current_flags} #[fg=${dark_purple}]#[bg=${bg_color}]${left_sep}"
+    tmux set-window-option -g window-status-current-format "#[fg=${window_sep_fg}]#[bg=${window_sep_bg}]${window_sep}#[fg=${white}]#[bg=${dark_purple}] #I #W${current_flags}${agent_state} #[fg=${dark_purple}]#[bg=${bg_color}]${left_sep}"
   else
-    tmux set-window-option -g window-status-current-format "#[fg=${white}]#[bg=${dark_purple}] #I #W${current_flags} "
+    tmux set-window-option -g window-status-current-format "#[fg=${white}]#[bg=${dark_purple}] #I #W${current_flags}${agent_state} "
   fi
 
-  tmux set-window-option -g window-status-format "#[fg=${white}]#[bg=${bg_color}] #I #W${flags}"
+  tmux set-window-option -g window-status-format "#[fg=${white}]#[bg=${bg_color}] #I #W${flags}${agent_state}"
   tmux set-window-option -g window-status-activity-style "bold"
   tmux set-window-option -g window-status-bell-style "bold"
 }
